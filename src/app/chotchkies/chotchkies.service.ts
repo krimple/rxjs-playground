@@ -1,30 +1,38 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {Chotchkie} from './chotchkies.model';
-import {map} from 'rxjs/operators';
+import {Observable, ReplaySubject} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 
 @Injectable()
 export class ChotchkiesService {
+
   constructor(private httpClient: HttpClient) { }
 
-  getChotchkies(): Observable<Chotchkie[]> {
+  getAllChotckies(): Observable<Chotchkie[]> {
     return this.httpClient.get<Chotchkie[]>('/api/chotchkies');
-    /*
-      .pipe(
-        // this is the Observable's map
-        map((chotchkies: Chotchkie[]) => {
-          // this is just an Array.prototype.map to transform
-          // our received result into another form (strip out all but name)
-          return chotchkies.map(
-            (chotchkie) => {
-              return {
-                ...chotchkie,
-                descriptionLength: chotchkie.description.length
-              };
-            });
-        })
-      );
-      */
+  }
+
+  getAllChotckiesHardcoded(): Observable<Chotchkie[]> {
+    const results = new ReplaySubject<Chotchkie[]>();
+
+    results.next([
+      {
+        id: 1,
+        name: 'Stapler',
+        description: 'My stapler!',
+        price: 15,
+        quantityOnHand: 1
+      },
+      {
+        id: 2,
+        name: 'Stapler',
+        description: 'My stapler!',
+        price: 15,
+        quantityOnHand: 1
+      }
+    ]);
+
+    results.complete();
+    return results;
   }
 }

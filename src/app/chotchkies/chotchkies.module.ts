@@ -2,8 +2,8 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {ChotchkiesListComponent} from './list/chotchkies-list.component';
 import {NgModule} from '@angular/core';
-import {HttpClientModule} from '@angular/common/http';
 import {ChotchkiesService} from './chotchkies.service';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   imports: [

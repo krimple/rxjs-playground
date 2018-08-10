@@ -12,7 +12,6 @@ import {ChotchkiesModule} from './chotchkies/chotchkies.module';
     BrowserModule,
     ChotchkiesModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
