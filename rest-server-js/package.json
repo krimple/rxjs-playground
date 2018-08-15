@@ -1,0 +1,22 @@
+{
+  "name": "rest-server-node-low-db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest src",
+    "dev": "jest src --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "jest": "^23.5.0",
+    "lowdb": "^1.0.0",
+    "sqlite3": "^4.0.2",
+    "supertest": "^3.1.0"
+  }
+}

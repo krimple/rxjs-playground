@@ -112,7 +112,7 @@ describe('RxJS Experiments', () => {
        );
   });
 
-  xit('should take 100 values with async', async(() => {
+  it('should take 100 values with async', async(() => {
       interval(50)
        .pipe(
          take(10),

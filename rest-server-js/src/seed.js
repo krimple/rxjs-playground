@@ -1,4 +1,4 @@
-{
+module.exports = {
   "chotchkies": [
     {
       "id": 1,
@@ -23,4 +23,4 @@
       "fulfilled": false
     }
   ]
-}
+};

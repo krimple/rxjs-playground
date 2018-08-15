@@ -8,8 +8,8 @@ import {HttpClientModule} from '@angular/common/http';
 @NgModule({
   imports: [
     ReactiveFormsModule,
+    HttpClientModule,
     CommonModule,
-    HttpClientModule
   ],
   declarations: [
     ChotchkiesListComponent
