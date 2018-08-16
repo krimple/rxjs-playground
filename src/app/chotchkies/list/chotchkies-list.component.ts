@@ -8,23 +8,27 @@ import {tap} from 'rxjs/operators';
   template: `
     <div class="container">
       <h3>List of Chotchkies</h3>
-      <ul *ngIf="chotchkies">
-        <li class="mb-2" *ngFor="let chotchkie of chotchkies">
-          <button
-            class="btn btn-sm btn-primary"
-            (click)="decrementInventory(chotchkie.id)">
+      <table class="table-responsive-sm" *ngIf="chotchkies">
+        <tr class="mb-2" *ngFor="let chotchkie of chotchkies">
+          <td>{{ chotchkie.name }} </td>
+          <td>{{ chotchkie.quantityOnHand }}</td>
+          <td>{{ chotchkie.price | currency }}</td>
+          <td>
+            <button
+              class="btn btn-sm btn-primary"
+              (click)="decrementInventory(chotchkie.id)">
            Buy one!
           </button>
-           {{ chotchkie.name }}
-          - {{ chotchkie.quantityOnHand }} left
-          at {{ chotchkie.price | currency }}
-          <button
-            class="btn btn-sm btn-danger"
-          (click)="removeChotchkie(chotchkie.id)">
+          </td>
+          <td>
+            <button
+              class="btn btn-sm btn-danger"
+              (click)="removeChotchkie(chotchkie.id)">
             Delete
           </button>
-       </li>
-      </ul>
+          </td>
+        </tr>
+      </table>
     </div>
   `
 })
