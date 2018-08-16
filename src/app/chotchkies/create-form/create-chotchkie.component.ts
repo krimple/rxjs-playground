@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Chotchkie} from '../chotchkies.model';
 import {ChotchkiesService} from '../chotchkies.service';
 
@@ -8,7 +8,10 @@ import {ChotchkiesService} from '../chotchkies.service';
   template: `
     <div class="container">
     <h3>New Chotchkie...</h3>
-    <form *ngIf="chotchkieFormGroup" [formGroup]="chotchkieFormGroup">
+    <form
+      *ngIf="chotchkieFormGroup"
+      (submit)="handleSubmit()"
+      [formGroup]="chotchkieFormGroup">
       <div class="form-group">
         <label for="name">Name</label>
         <input
@@ -42,9 +45,9 @@ import {ChotchkiesService} from '../chotchkies.service';
           formControlName="quantityOnHand">
       </div>
       <button
+        [disabled]="chotchkieFormGroup.invalid"
         class="btn btn-lg btn-primary"
-        type="submit"
-        (click)="handleSubmit()">
+        type="submit">
         Create new Chotchkie
       </button>
     </form>
@@ -54,25 +57,26 @@ import {ChotchkiesService} from '../chotchkies.service';
 export class CreateChotchkieComponent implements OnInit {
 
   chotchkieFormGroup: FormGroup;
-  chotchkieFormValue: Chotchkie;
 
   constructor(private formBuilder: FormBuilder,
               private chotchkiesService: ChotchkiesService)  { }
 
   ngOnInit() {
     this.chotchkieFormGroup = this.formBuilder.group({
-      name: [''],
-      description: [''],
-      price: [0],
-      quantityOnHand: [0]
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      price: [0, Validators.required],
+      quantityOnHand: [0, Validators.required]
     });
-
   }
 
   handleSubmit() {
     this.chotchkiesService.createChotchkie(this.chotchkieFormGroup.value)
       .subscribe(
-        chotchkie => { console.log(`Saved successfully. ${JSON.stringify(chotchkie)}`); },
+        chotchkie => {
+          console.log(`Saved successfully. ${JSON.stringify(chotchkie)}`);
+          this.chotchkieFormGroup.reset({ name: '', description: '', price: 0, quantityOnHand: 0 });
+        },
         error => { alert(error); }
       );
   }
