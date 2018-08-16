@@ -9,11 +9,21 @@ import {tap} from 'rxjs/operators';
     <div class="container">
       <h3>List of Chotchkies</h3>
       <ul *ngIf="chotchkies">
-        <li *ngFor="let chotchkie of chotchkies">
-          {{ chotchkie.name }}
+        <li class="mb-2" *ngFor="let chotchkie of chotchkies">
+          <button
+            class="btn btn-sm btn-primary"
+            (click)="decrementInventory(chotchkie.id)">
+           Buy one!
+          </button>
+           {{ chotchkie.name }}
           - {{ chotchkie.quantityOnHand }} left
           at {{ chotchkie.price | currency }}
-        </li>
+          <button
+            class="btn btn-sm btn-danger"
+          (click)="removeChotchkie(chotchkie.id)">
+            Delete
+          </button>
+       </li>
       </ul>
     </div>
   `
@@ -42,6 +52,24 @@ export class ChotchkiesListComponent implements OnInit {
       )
       .subscribe(
         (chotchkies: Chotchkie[]) => this.chotchkies = chotchkies
+      );
+  }
+
+  private decrementInventory(id: number) {
+    this.chotchkiesService.patchChotchkie(id, {
+      purchasedQuantity: 1
+    })
+      .subscribe(
+        () => console.log(`Quantity updated...`),
+        (error) => alert(error)
+    );
+  }
+
+  private removeChotchkie(id: number) {
+    this.chotchkiesService.removeChotchkie(id)
+      .subscribe(
+        () => console.log(`${id} deleted.`),
+        (error) => alert(error)
       );
   }
 }

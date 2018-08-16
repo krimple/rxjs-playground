@@ -29,10 +29,19 @@ export class ChotchkiesService {
       );
   }
 
-  async patchChotchkie(id: number, chotchkieData: any) {
+  patchChotchkie(id: number, chotchkieData: any) {
     return this.httpClient.patch<Chotchkie>(`/api/chotchkies/${id}`, chotchkieData)
       .pipe(
         tap(() =>  {
+          this._refreshNeeded.next();
+        })
+      );
+  }
+
+  removeChotchkie(id: number) {
+    return this.httpClient.delete(`/api/chotchkies/${id}`)
+      .pipe(
+        tap(() => {
           this._refreshNeeded.next();
         })
       );
