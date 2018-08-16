@@ -4,3 +4,10 @@ input.ng-invalid.ng-touched {
   background-color: red;
 }
 
+textarea.ng-invalid.ng-touched {
+  background-color: red;
+}
+
+.is-invalid {
+  color: red;
+}
