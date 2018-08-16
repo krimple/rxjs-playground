@@ -53,13 +53,17 @@ const createRoutes = () => {
     }
   });
 
-  router.post('/chotchkies/:id/decrementInventory/:amount', async (req, res) => {
+  router.patch('/chotchkies/:id', async (req, res) => {
     try {
       const chotchkieId = parseInt(req.params.id);
-      const amount = parseInt(req.params.amount);
-      // TODO - param error check
-      const updatedChotchkie = await db.purchaseNChotchkies(chotchkieId, amount);
-      res.status(200).send(updatedChotchkie);
+      console.log(`Patching ${chotchkieId}`);
+      if (!chotchkieId) {
+        res.status(500).send('ID not a valid number');
+      } else {
+        const targetChanges = req.body;
+        const updatedChotchkie = await db.patchChotchkie(chotchkieId, targetChanges);
+        res.status(200).send(updatedChotchkie);
+      }
     } catch (e) {
       if (e === 'NOT_FOUND') {
         res.status(409).send('chotchkie not found');
@@ -79,5 +83,8 @@ const createRoutes = () => {
   return router;
 };
 
+function getChotchkieId(req) {
+  return parseInt(req.params.id) || undefined;
+}
 
 module.exports = createRoutes;

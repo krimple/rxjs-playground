@@ -4,10 +4,12 @@ class Database {
     this.nextKey = this.database.chotchkies.reduce((acc, curr) => { return curr.id > acc ? curr.id : acc }, 0);
   }
 
+  /** return a clone of the collection */
   getAllChotchkies() {
    return [ ...this.database.chotchkies];
   }
 
+  /** return a clone of the item of the collection with the given id */
   getChotchkieById(id) {
     const chotchkie = this.database.chotchkies.find((candidate) => {
       return (candidate.id === id);
@@ -20,6 +22,10 @@ class Database {
     }
   }
 
+  /** Add a new item, incrementing the current key. This isn't a
+   * real world database, just a toy, so we do the increment internally.
+   * TODO: Someday convert this whole thing to a real database
+   */
   addChotchkie(chotchkie) {
     // The worst concurrency bug ever. This is just a toy app, folks
     this.nextKey++;
@@ -28,6 +34,7 @@ class Database {
     return Promise.resolve({ ...chotchkie });
   }
 
+  /** Replace the chotchkie with the given id with all the props and the key */
   updateChotchkie(id, props) {
     const chotchkieIndex = this.database.chotchkies.findIndex(c => c.id === id);
     if (chotchkieIndex > -1) {
@@ -38,15 +45,45 @@ class Database {
     throw new Error(`Could not find chotchkie with id ${id}`);
   }
 
-  patchChotchkie(id, props) {
+  /** Patch only the field changes passed. If the user passes purchasedQuantity,
+   * look up the quantity on hand, and verify the user can purchase that quantity
+   * without running negative. If so, make the change.
+   *
+   * TODO: real dataase, real locking. This.is.a.toy.
+   */
+  async patchChotchkie(id, props) {
     const chotchkieIndex = this.database.chotchkies.findIndex(c => c.id === id);
-    if (chotchkieIndex > -1) {
-      const currentChotchkie = this.database.chotchkies[chotchkieIndex];
-      const updatedChotchkie = { ...currentChotchkie, ...props };
-      this.database.chotchkies[chotchkieIndex] = updatedChotchkie;
-      return Promise.resolve({ ... updatedChotchkie });
+    if (chotchkieIndex === -1) {
+      return Promise.reject('NOT_FOUND');
     }
-    throw new Error(`Could not find chotchkie with id ${id}`);
+    const currentChotchkie = this.database.chotchkies[chotchkieIndex];
+
+    if (!currentChotchkie) {
+      return Promise.reject('NOT_FOUND');
+    }
+
+    if (props.purchasedQuantity) {
+      const newQuantity = currentChotchkie.quantityOnHand - props.purchasedQuantity;
+      if (newQuantity < 0) {
+        return Promise.reject('LOW_QTY');
+      }
+
+      // remove the artificial prop
+      delete props.purchasedQuantity;
+
+      this.database.chotchkies[chotchkieIndex] = {
+        ...currentChotchkie,
+        ...props,
+        quantityOnHand: newQuantity
+      };
+
+    } else {
+      this.database.chotchkies[chotchkieIndex] = {
+        ...currentChotchkie,
+        ...props
+      };
+    }
+    return Promise.resolve({ ...this.database.chotchkies[chotchkieIndex] });
   }
 
   purchaseNChotchkies(id, qty) {

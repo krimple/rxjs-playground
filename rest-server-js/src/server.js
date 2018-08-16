@@ -11,10 +11,6 @@ const server = app.listen(3000, () => {
   console.log('Running on port 3000');
 });
 
-function getChotchkieId(req) {
-  return parseInt(req.params.id) || undefined;
-}
-
 
 
 
