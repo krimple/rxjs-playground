@@ -20,8 +20,8 @@ import {ChotchkiesService} from '../chotchkies.service';
           name="name"
           formControlName="name">
         <div
-          *ngIf="chotchkieFormGroup.controls.name.invalid &&
-                 chotchkieFormGroup.controls.name.touched"
+          *ngIf="chotchkieFormGroup.controls['name'].invalid &&
+                 chotchkieFormGroup.controls['name'].touched"
           class="is-invalid">
           Name must be between 1 and 60 characters
         </div>
@@ -34,8 +34,8 @@ import {ChotchkiesService} from '../chotchkies.service';
           formControlName="description">
         </textarea>
         <div
-          *ngIf="chotchkieFormGroup.controls.description.invalid &&
-                 chotchkieFormGroup.controls.description.touched"
+          *ngIf="chotchkieFormGroup.controls['description'].invalid &&
+                 chotchkieFormGroup.controls['description'].touched"
           class="is-invalid">
           Description must be between 1 and 1024 characters
         </div>
@@ -48,8 +48,8 @@ import {ChotchkiesService} from '../chotchkies.service';
           class="form-control"
           formControlName="price">
         <div
-          *ngIf="chotchkieFormGroup.controls.price.invalid &&
-                 chotchkieFormGroup.controls.price.touched"
+          *ngIf="chotchkieFormGroup.controls['price'].invalid &&
+                 chotchkieFormGroup.controls['price'].touched"
           class="is-invalid">
           Price must be between 0 and 1000000
         </div>
@@ -62,8 +62,8 @@ import {ChotchkiesService} from '../chotchkies.service';
           name="quantityOnHand"
           formControlName="quantityOnHand">
         <div
-          *ngIf="chotchkieFormGroup.controls.quantityOnHand.invalid &&
-                 chotchkieFormGroup.controls.quantityOnHand.touched"
+          *ngIf="chotchkieFormGroup.controls['quantityOnHand'].invalid &&
+                 chotchkieFormGroup.controls['quantityOnHand'].touched"
           class="is-invalid">
           Quantity on hand must be >= 0
         </div>

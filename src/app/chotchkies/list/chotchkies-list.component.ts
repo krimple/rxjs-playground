@@ -6,9 +6,20 @@ import {tap} from 'rxjs/operators';
 @Component({
   selector: 'rxjs-playground-chotchkies-list',
   template: `
-    <div class="container">
       <h3>List of Chotchkies</h3>
-      <table class="table-responsive-sm" *ngIf="chotchkies">
+      <form class="form-inline">
+        <label>Filter</label>
+        <input
+          class="form-control"
+          type="text"
+          #filterInput>
+        <button
+          class="btn btn-danger">
+          Search!
+        </button>
+      </form>
+      <div class="row"><div class="col">&nbsp;</div></div>
+      <table class="table table-bordered table-striped table-responsive-sm" *ngIf="chotchkies">
         <tr class="mb-2" *ngFor="let chotchkie of chotchkies">
           <td>{{ chotchkie.name }} </td>
           <td>{{ chotchkie.quantityOnHand }}</td>
@@ -29,7 +40,6 @@ import {tap} from 'rxjs/operators';
           </td>
         </tr>
       </table>
-    </div>
   `
 })
 export class ChotchkiesListComponent implements OnInit {
