@@ -9,17 +9,17 @@ import {FormBuilder, NgModel} from '@angular/forms';
   template: `
       <h3>List of Chotchkies</h3>
       <form>
-      <label>Filter</label>
-      <input
-        [(ngModel)]="searchTerm"
-        class="form-control"
-        name="searchTerm"
-        type="text"
-        #filterInput="ngModel">
-      <button
-        class="btn btn-danger">
-        Search!
-      </button>
+          <label>Filter</label>
+          <input
+            [(ngModel)]="searchTerm"
+            class="form-control"
+            name="searchTerm"
+            type="text"
+            #filterInput="ngModel">
+          <button
+            class="btn btn-danger">
+            Search!
+          </button>
       </form>
     <div class="row"><div class="col">&nbsp;</div></div>
       <table class="table table-bordered table-striped table-responsive-sm" *ngIf="chotchkies">

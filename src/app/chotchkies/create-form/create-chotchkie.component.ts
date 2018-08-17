@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Chotchkie} from '../chotchkies.model';
 import {ChotchkiesService} from '../chotchkies.service';
 
 @Component({
