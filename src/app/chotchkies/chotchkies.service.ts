@@ -19,6 +19,10 @@ export class ChotchkiesService {
     return this.httpClient.get<Chotchkie[]>('/api/chotchkies');
   }
 
+  getChotchkiesBySearchTerm(term: string) {
+    return this.httpClient.get<Chotchkie[]>('/api/chotchkies', { params: { searchTerm: term }});
+  }
+
   createChotchkie(chotchkie: Chotchkie): Observable<Chotchkie> {
     return this.httpClient
       .post<Chotchkie>('/api/chotchkies', chotchkie)

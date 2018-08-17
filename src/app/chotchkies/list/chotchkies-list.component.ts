@@ -1,24 +1,27 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Chotchkie} from '../chotchkies.model';
 import {ChotchkiesService} from '../chotchkies.service';
 import {tap} from 'rxjs/operators';
+import {FormBuilder, FormGroup, NgModel} from '@angular/forms';
 
 @Component({
   selector: 'rxjs-playground-chotchkies-list',
   template: `
       <h3>List of Chotchkies</h3>
-      <form class="form-inline">
-        <label>Filter</label>
-        <input
-          class="form-control"
-          type="text"
-          #filterInput>
-        <button
-          class="btn btn-danger">
-          Search!
-        </button>
+      <form>
+      <label>Filter</label>
+      <input
+        [(ngModel)]="searchTerm"
+        class="form-control"
+        name="searchTerm"
+        type="text"
+        #filterInput="ngModel">
+      <button
+        class="btn btn-danger">
+        Search!
+      </button>
       </form>
-      <div class="row"><div class="col">&nbsp;</div></div>
+    <div class="row"><div class="col">&nbsp;</div></div>
       <table class="table table-bordered table-striped table-responsive-sm" *ngIf="chotchkies">
         <tr class="mb-2" *ngFor="let chotchkie of chotchkies">
           <td>{{ chotchkie.name }} </td>
@@ -28,8 +31,7 @@ import {tap} from 'rxjs/operators';
             <button
               class="btn btn-sm btn-primary"
               (click)="decrementInventory(chotchkie.id)">
-           Buy one!
-          </button>
+           Buy one! </button>
           </td>
           <td>
             <button
@@ -44,12 +46,15 @@ import {tap} from 'rxjs/operators';
 })
 export class ChotchkiesListComponent implements OnInit {
 
+  @ViewChild('filterInput') filterInput: NgModel;
+
   chotchkies: Chotchkie[];
 
-  constructor(private chotchkiesService: ChotchkiesService) {
-  }
+  constructor(private formBuilder: FormBuilder,
+              private chotchkiesService: ChotchkiesService) { }
 
   ngOnInit() {
+    console.dir(this.filterInput);
     this.getAllChotchkies();
     this.chotchkiesService.refreshNeeded.subscribe(
       () => {
@@ -57,6 +62,14 @@ export class ChotchkiesListComponent implements OnInit {
         this.getAllChotchkies();
       }
     );
+
+    this.filterInput.valueChanges.subscribe(term => {
+      if (term) {
+        this.getChotchkiesBySearchTerm(term);
+      } else {
+        this.getAllChotchkies();
+      }
+    });
   }
 
   private getAllChotchkies() {
@@ -64,6 +77,13 @@ export class ChotchkiesListComponent implements OnInit {
       .pipe(
         tap(c => console.log(`Got chotchkies: ${JSON.stringify(c)}`))
       )
+      .subscribe(
+        (chotchkies: Chotchkie[]) => this.chotchkies = chotchkies
+      );
+  }
+
+  private getChotchkiesBySearchTerm(term: string) {
+    this.chotchkiesService.getChotchkiesBySearchTerm(term)
       .subscribe(
         (chotchkies: Chotchkie[]) => this.chotchkies = chotchkies
       );

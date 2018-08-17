@@ -22,6 +22,15 @@ class Database {
     }
   }
 
+  findChotchkiesBySearchTerm(term) {
+    const matches = this.database.chotchkies.filter(chotchkie => chotchkie.name.search(term) > -1);
+    if (matches) {
+      return [ ...matches ];
+    } else {
+      return [];
+    }
+  }
+
   /** Add a new item, incrementing the current key. This isn't a
    * real world database, just a toy, so we do the increment internally.
    * TODO: Someday convert this whole thing to a real database

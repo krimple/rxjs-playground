@@ -77,7 +77,15 @@ const createRoutes = () => {
 
   router.get('/chotchkies', (req, res) => {
     res.contentType('json');
-    res.status(200).send(db.getAllChotchkies());
+    const searchTerm = req.query.searchTerm;
+    console.log(`Got search term ${searchTerm})`);
+    if (searchTerm) {
+      setTimeout(() => {
+       res.status(200).send(db.findChotchkiesBySearchTerm(searchTerm));
+      }, Math.random() * 100);
+   } else {
+      res.status(200).send(db.getAllChotchkies());
+    }
   });
 
   return router;
