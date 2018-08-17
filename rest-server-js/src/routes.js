@@ -81,7 +81,7 @@ const createRoutes = () => {
     if (searchTerm) {
       setTimeout(() => {
        res.status(200).send(db.findChotchkiesBySearchTerm(searchTerm));
-      }, Math.random() * 100);
+      }, Math.random() * 3000);
    } else {
       res.status(200).send(db.getAllChotchkies());
     }

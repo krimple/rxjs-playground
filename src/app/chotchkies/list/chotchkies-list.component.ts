@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Chotchkie} from '../chotchkies.model';
 import {ChotchkiesService} from '../chotchkies.service';
-import {debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
-import {FormBuilder, FormGroup, NgModel} from '@angular/forms';
+import {debounceTime, distinctUntilChanged, filter, merge, switchMap, tap} from 'rxjs/operators';
+import {FormBuilder, NgModel} from '@angular/forms';
 
 @Component({
   selector: 'rxjs-playground-chotchkies-list',
@@ -57,8 +57,6 @@ export class ChotchkiesListComponent implements OnInit {
               private chotchkiesService: ChotchkiesService) { }
 
   ngOnInit() {
-    console.dir(this.filterInput);
-    this.getAllChotchkies();
     this.chotchkiesService.refreshNeeded.subscribe(
       () => {
         console.log('got a refresh');
@@ -66,19 +64,19 @@ export class ChotchkiesListComponent implements OnInit {
       }
     );
 
-    this.filterInput
-      .valueChanges
-      .pipe(
-        debounceTime(500),
-        distinctUntilChanged()
-      )
-      .subscribe(term => {
-      if (term) {
-        this.getChotchkiesBySearchTerm(term);
-      } else {
-        this.getAllChotchkies();
-      }
-    });
+    const emptySearch$ = this.filterInput.valueChanges.pipe(
+      filter(v => v === undefined),
+      debounceTime(500),
+      switchMap(() => this.chotchkiesService.getAllChotchkies())
+    );
+    const valueSearch$ = this.filterInput.valueChanges.pipe(
+      filter(v => v !== undefined),
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap((term: string) => this.chotchkiesService.getChotchkiesBySearchTerm(term)));
+
+    emptySearch$.pipe(merge(valueSearch$))
+      .subscribe((results) => this.chotchkies = results);
   }
 
   private getAllChotchkies() {
@@ -86,13 +84,6 @@ export class ChotchkiesListComponent implements OnInit {
       .pipe(
         tap(c => console.log(`Got chotchkies: ${JSON.stringify(c)}`))
       )
-      .subscribe(
-        (chotchkies: Chotchkie[]) => this.chotchkies = chotchkies
-      );
-  }
-
-  private getChotchkiesBySearchTerm(term: string) {
-    this.chotchkiesService.getChotchkiesBySearchTerm(term)
       .subscribe(
         (chotchkies: Chotchkie[]) => this.chotchkies = chotchkies
       );
