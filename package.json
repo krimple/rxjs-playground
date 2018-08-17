@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "npm run start-with-api",
     "start-angular": "ng serve --proxy-config proxy-conf.json",
     "start-api": "node rest-server-js/src/server",
     "start-with-api": "concurrently --raw \"npm run start-angular\" \"npm run start-api\"",
