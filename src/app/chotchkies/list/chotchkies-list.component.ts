@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Chotchkie} from '../chotchkies.model';
 import {ChotchkiesService} from '../chotchkies.service';
-import {tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
 import {FormBuilder, FormGroup, NgModel} from '@angular/forms';
 
 @Component({
@@ -25,6 +25,7 @@ import {FormBuilder, FormGroup, NgModel} from '@angular/forms';
       <table class="table table-bordered table-striped table-responsive-sm" *ngIf="chotchkies">
         <tr class="mb-2" *ngFor="let chotchkie of chotchkies">
           <td>{{ chotchkie.name }} </td>
+          <td>{{ chotchkie.description }}</td>
           <td>{{ chotchkie.quantityOnHand }}</td>
           <td>{{ chotchkie.price | currency }}</td>
           <td>
@@ -48,6 +49,8 @@ export class ChotchkiesListComponent implements OnInit {
 
   @ViewChild('filterInput') filterInput: NgModel;
 
+  searchTerm: string;
+
   chotchkies: Chotchkie[];
 
   constructor(private formBuilder: FormBuilder,
@@ -63,7 +66,13 @@ export class ChotchkiesListComponent implements OnInit {
       }
     );
 
-    this.filterInput.valueChanges.subscribe(term => {
+    this.filterInput
+      .valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe(term => {
       if (term) {
         this.getChotchkiesBySearchTerm(term);
       } else {

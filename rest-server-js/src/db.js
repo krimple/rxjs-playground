@@ -22,8 +22,11 @@ class Database {
     }
   }
 
+  /** TODO: deal with case sensitivity and handle missing values in name, description, even term */
   findChotchkiesBySearchTerm(term) {
-    const matches = this.database.chotchkies.filter(chotchkie => chotchkie.name.search(term) > -1);
+    const matches = this.database.chotchkies.filter(chotchkie =>
+      chotchkie.name.search(term) > -1 ||
+      chotchkie.description.search(term) > -1);
     if (matches) {
       return [ ...matches ];
     } else {

@@ -78,7 +78,6 @@ const createRoutes = () => {
   router.get('/chotchkies', (req, res) => {
     res.contentType('json');
     const searchTerm = req.query.searchTerm;
-    console.log(`Got search term ${searchTerm})`);
     if (searchTerm) {
       setTimeout(() => {
        res.status(200).send(db.findChotchkiesBySearchTerm(searchTerm));
