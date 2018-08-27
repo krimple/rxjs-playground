@@ -9,7 +9,7 @@ export class ChotchkiesService {
 
   private _refreshNeeded = new Subject<void>();
 
-  get refreshNeeded() {
+  get refreshNeeded$() {
     return this._refreshNeeded;
   }
 

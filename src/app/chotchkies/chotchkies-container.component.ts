@@ -3,7 +3,11 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'rxjs-playground-chotchkies',
   template: `
-    <h3>Reactive Forms Demo - Chotchkies</h3>
+    <div class="navbar">
+      <div class="navbar-text">
+        <h1>Reactive Forms Demo - Chotchkies</h1>
+      </div>
+    </div>
     <div class="row border-top border-dark">
       <div class="col-7">
         <rxjs-playground-chotchkies-list></rxjs-playground-chotchkies-list>

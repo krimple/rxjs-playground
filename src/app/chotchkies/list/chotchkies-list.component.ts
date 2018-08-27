@@ -1,7 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Chotchkie} from '../chotchkies.model';
 import {ChotchkiesService} from '../chotchkies.service';
-import {debounceTime, distinctUntilChanged, filter, merge, switchMap, tap} from 'rxjs/operators';
+import {merge, of} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, switchMap, tap} from 'rxjs/operators';
 import {FormBuilder, NgModel} from '@angular/forms';
 
 @Component({
@@ -57,25 +58,23 @@ export class ChotchkiesListComponent implements OnInit {
               private chotchkiesService: ChotchkiesService) { }
 
   ngOnInit() {
-    this.chotchkiesService.refreshNeeded.subscribe(
-      () => {
-        console.log('got a refresh');
-        this.getAllChotchkies();
-      }
-    );
-
     const emptySearch$ = this.filterInput.valueChanges.pipe(
-      filter(v => v === undefined),
+      filter(v => !!!v),
       debounceTime(500),
       switchMap(() => this.chotchkiesService.getAllChotchkies())
     );
     const valueSearch$ = this.filterInput.valueChanges.pipe(
-      filter(v => v !== undefined),
+      filter(v => !!v),
       debounceTime(500),
       distinctUntilChanged(),
       switchMap((term: string) => this.chotchkiesService.getChotchkiesBySearchTerm(term)));
 
-    emptySearch$.pipe(merge(valueSearch$))
+    const refreshedList$ = this.chotchkiesService.refreshNeeded$.pipe(
+      tap(() => this.filterInput.control.reset(null)),
+      switchMap(() => of(this.chotchkies))
+    );
+
+    merge(emptySearch$, valueSearch$, refreshedList$)
       .subscribe((results) => this.chotchkies = results);
   }
 
@@ -84,6 +83,13 @@ export class ChotchkiesListComponent implements OnInit {
       .pipe(
         tap(c => console.log(`Got chotchkies: ${JSON.stringify(c)}`))
       )
+      .subscribe(
+        (chotchkies: Chotchkie[]) => this.chotchkies = chotchkies
+      );
+  }
+
+  private getChotchkiesBySearchTerm(term: string) {
+    this.chotchkiesService.getChotchkiesBySearchTerm(term)
       .subscribe(
         (chotchkies: Chotchkie[]) => this.chotchkies = chotchkies
       );
