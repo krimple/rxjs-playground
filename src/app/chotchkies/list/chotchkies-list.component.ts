@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Chotchkie} from '../chotchkies.model';
 import {ChotchkiesService} from '../chotchkies.service';
-import {merge, of} from 'rxjs';
+import {merge} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, switchMap, tap} from 'rxjs/operators';
 import {FormBuilder, NgModel} from '@angular/forms';
 
@@ -63,6 +63,7 @@ export class ChotchkiesListComponent implements OnInit {
       debounceTime(500),
       switchMap(() => this.chotchkiesService.getAllChotchkies())
     );
+
     const valueSearch$ = this.filterInput.valueChanges.pipe(
       filter(v => !!v),
       debounceTime(500),
@@ -70,11 +71,11 @@ export class ChotchkiesListComponent implements OnInit {
       switchMap((term: string) => this.chotchkiesService.getChotchkiesBySearchTerm(term)));
 
     this.chotchkiesService.refreshNeeded$.pipe(
-      tap(() => this.filterInput.control.reset(null)),
+      tap(() => this.filterInput.control.reset(null))
     ).subscribe();
 
     merge(emptySearch$, valueSearch$)
-      .subscribe((results) => this.chotchkies = results);
+      .subscribe(results => this.chotchkies = results);
   }
 
   private decrementInventory(id: number) {
