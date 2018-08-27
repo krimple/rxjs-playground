@@ -69,12 +69,11 @@ export class ChotchkiesListComponent implements OnInit {
       distinctUntilChanged(),
       switchMap((term: string) => this.chotchkiesService.getChotchkiesBySearchTerm(term)));
 
-    const refreshedList$ = this.chotchkiesService.refreshNeeded$.pipe(
+    this.chotchkiesService.refreshNeeded$.pipe(
       tap(() => this.filterInput.control.reset(null)),
-      switchMap(() => of(this.chotchkies))
     );
 
-    merge(emptySearch$, valueSearch$, refreshedList$)
+    merge(emptySearch$, valueSearch$)
       .subscribe((results) => this.chotchkies = results);
   }
 
