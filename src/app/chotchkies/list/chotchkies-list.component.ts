@@ -71,7 +71,7 @@ export class ChotchkiesListComponent implements OnInit {
 
     this.chotchkiesService.refreshNeeded$.pipe(
       tap(() => this.filterInput.control.reset(null)),
-    );
+    ).subscribe();
 
     merge(emptySearch$, valueSearch$)
       .subscribe((results) => this.chotchkies = results);

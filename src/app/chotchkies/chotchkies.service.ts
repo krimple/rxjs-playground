@@ -7,10 +7,10 @@ import {tap} from 'rxjs/operators';
 @Injectable()
 export class ChotchkiesService {
 
-  private _refreshNeeded = new Subject<void>();
+  private _refreshNeeded$ = new Subject<void>();
 
   get refreshNeeded$() {
-    return this._refreshNeeded;
+    return this._refreshNeeded$;
   }
 
   constructor(private httpClient: HttpClient) { }
@@ -28,7 +28,7 @@ export class ChotchkiesService {
       .post<Chotchkie>('/api/chotchkies', chotchkie)
       .pipe(
         tap(() =>  {
-          this._refreshNeeded.next();
+          this._refreshNeeded$.next();
         })
       );
   }
@@ -37,7 +37,7 @@ export class ChotchkiesService {
     return this.httpClient.patch<Chotchkie>(`/api/chotchkies/${id}`, chotchkieData)
       .pipe(
         tap(() =>  {
-          this._refreshNeeded.next();
+          this._refreshNeeded$.next();
         })
       );
   }
@@ -46,7 +46,7 @@ export class ChotchkiesService {
     return this.httpClient.delete(`/api/chotchkies/${id}`)
       .pipe(
         tap(() => {
-          this._refreshNeeded.next();
+          this._refreshNeeded$.next();
         })
       );
   }
