@@ -77,23 +77,6 @@ export class ChotchkiesListComponent implements OnInit {
       .subscribe((results) => this.chotchkies = results);
   }
 
-  private getAllChotchkies() {
-    this.chotchkiesService.getAllChotchkies()
-      .pipe(
-        tap(c => console.log(`Got chotchkies: ${JSON.stringify(c)}`))
-      )
-      .subscribe(
-        (chotchkies: Chotchkie[]) => this.chotchkies = chotchkies
-      );
-  }
-
-  private getChotchkiesBySearchTerm(term: string) {
-    this.chotchkiesService.getChotchkiesBySearchTerm(term)
-      .subscribe(
-        (chotchkies: Chotchkie[]) => this.chotchkies = chotchkies
-      );
-  }
-
   private decrementInventory(id: number) {
     this.chotchkiesService.patchChotchkie(id, {
       purchasedQuantity: 1
