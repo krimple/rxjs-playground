@@ -22,8 +22,18 @@ class Database {
     }
   }
 
+  /** TODO: deal with case sensitivity */
+  chotchkieByNameExists(term) {
+    const result = this.database.chotchkies.findIndex(chotchkie => {
+      console.log(`comparing ${term} to ${chotchkie.name} in ${JSON.stringify(term)}`);
+      return chotchkie.name === term;
+    });
+    console.log(`search results: ${result}`);
+    return result > -1;
+  }
+
   /** TODO: deal with case sensitivity and handle missing values in name, description, even term */
-  findChotchkiesBySearchTerm(term) {
+  findChotchkiesByFuzzySearchTerm(term) {
     const matches = this.database.chotchkies.filter(chotchkie =>
       chotchkie.name.search(term) > -1 ||
       chotchkie.description.search(term) > -1);

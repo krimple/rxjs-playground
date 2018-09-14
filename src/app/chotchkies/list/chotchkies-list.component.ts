@@ -84,7 +84,7 @@ export class ChotchkiesListComponent implements OnInit {
     })
       .subscribe(
         () => console.log(`Quantity updated...`),
-        (error) => alert(error)
+        (error) => alert(JSON.stringify(error))
     );
   }
 
@@ -92,7 +92,7 @@ export class ChotchkiesListComponent implements OnInit {
     this.chotchkiesService.removeChotchkie(id)
       .subscribe(
         () => console.log(`${id} deleted.`),
-        (error) => alert(error)
+        (error) => alert(JSON.stringify(error))
       );
   }
 }

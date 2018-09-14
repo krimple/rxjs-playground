@@ -3,17 +3,17 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "rxjs-playground": {
+    "rxjs-playground-updated-shell": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
       "prefix": "app",
       "schematics": {},
-      "architect": {
+      "targets": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/rxjs-playground",
+            "outputPath": "dist/rxjs-playground-updated-shell",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -50,18 +50,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "rxjs-playground:build"
+            "browserTarget": "rxjs-playground-updated-shell:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "rxjs-playground:build:production"
+              "browserTarget": "rxjs-playground-updated-shell:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "rxjs-playground:build"
+            "browserTarget": "rxjs-playground-updated-shell:build"
           }
         },
         "test": {
@@ -95,19 +95,19 @@
         }
       }
     },
-    "rxjs-playground-e2e": {
+    "rxjs-playground-updated-shell-e2e": {
       "root": "e2e/",
       "projectType": "application",
-      "architect": {
+      "targets": {
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "rxjs-playground:serve"
+            "devServerTarget": "rxjs-playground-updated-shell:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "rxjs-playground:serve:production"
+              "devServerTarget": "rxjs-playground-updated-shell:serve:production"
             }
           }
         },
@@ -123,5 +123,5 @@
       }
     }
   },
-  "defaultProject": "rxjs-playground"
+  "defaultProject": "rxjs-playground-updated-shell"
 }

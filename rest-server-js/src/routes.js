@@ -19,6 +19,64 @@ const createRoutes = () => {
     }
   });
 
+  router.get('/chotchkies', (req, res) => {
+    res.contentType('json');
+    const searchTerm = req.query.searchTerm;
+    const name = req.query.name;
+
+    debugger;
+    if (!searchTerm && !name) {
+      delayedSendChotchkiesList(res);
+    } else {
+     if (name) {
+        delayedSearchForChotchkieByName(req, res, name);
+      } else {
+        delayedHandleFuzzySearchTerm(req, res, searchTerm);
+      }
+    }
+  });
+
+  function delayedSendChotchkiesList(res) {
+    setTimeout(() => {
+        res.status(200).send(db.getAllChotchkies());
+      }, Math.random() * 500);
+  }
+
+  async function delayedSearchForChotchkieByName(req, res, name) {
+   console.log(`Searching for ${decodedName}`);
+    try {
+      const result = await db.chotchkieByNameExists(safelyDecodeString(decodedName));
+      setTimeout(() => {
+        res.status(200).send(result);
+      }, Math.random() * 3000);
+    } catch (e) {
+      console.log(e);
+      res.status(404).send(`Chotchkie with name ${decodedName} not found. Reason ${JSON.stringify(e)}`);
+    }
+  }
+
+  async function delayedHandleFuzzySearchTerm(req, res, searchTerm) {
+    const decodedSearchTerm = safelyDecodeString(searchTerm);
+    try {
+      const result = await db.findChotchkiesByFuzzySearchTerm(safelyDecodeString(decodedSearchTerm));
+      setTimeout(() => {
+        res.status(200).send(result);
+      }, Math.random() * 3000);
+    } catch (e) {
+      console.log(e);
+      res.status(404).send(`Chotchkie with search term ${decodedSearchTerm} not found. Reason ${JSON.stringify(e)}`);
+    }
+  }
+
+  function safelyDecodeString(value) {
+    try {
+      return decodeURIComponent(value);
+    } catch (e) {
+      console.log(`cannot decode search term`, e);
+      return '';
+    }
+  }
+
   router.post('/chotchkies', async (req, res) => {
     const candidate = req.body;
     if (candidate) {
@@ -75,17 +133,6 @@ const createRoutes = () => {
     }
   });
 
-  router.get('/chotchkies', (req, res) => {
-    res.contentType('json');
-    const searchTerm = req.query.searchTerm;
-    if (searchTerm) {
-      setTimeout(() => {
-       res.status(200).send(db.findChotchkiesBySearchTerm(searchTerm));
-      }, Math.random() * 3000);
-   } else {
-      res.status(200).send(db.getAllChotchkies());
-    }
-  });
 
   return router;
 };
